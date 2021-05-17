@@ -1,13 +1,8 @@
 # Helm Charts
 
-### https://opensource.com/article/20/5/helm-charts
-### https://medium.com/bb-tutorials-and-thoughts/how-to-get-started-with-helm-b3babb30611f
-### https://amazicworld.com/using-helm-to-package-and-deploy-container-applications/
+$ helm create buildachart
 
-
-user@pradeep-lab-system:~/projects/helm$ helm create buildachart
-
-user@pradeep-lab-system:~/projects/helm$ find .
+$ find .
 .
 ./buildchart
 ./buildchart/.helmignore
@@ -42,14 +37,13 @@ Or
 method 2:    helm install my-cherry-chart buildachart/ --values buildachart/values.yaml 
 
 
-kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}"
+$ kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}"
 
-kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services cherry-chart
+$ kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services cherry-chart
 
 Open Browser and check with NodePort & Port
 
-
-helm list   or /     helm ls -n mytools
+$ helm list   or /     helm ls -n mytools
 
 ### Upgrade : 
 
@@ -75,3 +69,9 @@ $helm delete  release1
 helm install release1 buildchart-0.1.0.tgz -n mytools 
 
 helm delete release1  -n mytools
+
+Resources :
+
+- https://opensource.com/article/20/5/helm-charts
+- https://medium.com/bb-tutorials-and-thoughts/how-to-get-started-with-helm-b3babb30611f
+- https://amazicworld.com/using-helm-to-package-and-deploy-container-applications/

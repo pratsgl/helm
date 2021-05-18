@@ -108,17 +108,17 @@ Template files are set up with formatting that collects deployment information f
 Change the value to Always.
 
 Before:
-
+```console
 image:
   repository: nginx
   pullPolicy: IfNotPresent
-
+```
 After:
-
+```console
 image:
   repository: nginx
   pullPolicy: Always
-
+```
 Naming and secrets
 
 Next, take a look at the overrides in the chart. The first override is imagePullSecrets, which is a setting to pull a secret, such as a password or an API key you've generated as credentials for a private registry. Next are nameOverride and fullnameOverride. From the moment you ran helm create, its name (buildachart) was added to a number of configuration files—from the YAML ones above to the templates/helper.tpl file. If you need to rename a chart after you create it, this section is the best place to do it, so you don't miss any configuration files.
@@ -126,25 +126,24 @@ Next, take a look at the overrides in the chart. The first override is imagePull
 Change the chart's name using overrides.
 
 Before:
-
+```console
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
-
+```
 After:
-
+```console
 imagePullSecrets: []
 nameOverride: "cherry-awesome-app"
 fullnameOverride: "cherry-chart"
-
+```
 Accounts
-
 Service accounts provide a user identity to run in the pod inside the cluster. If it's left blank, the name will be generated based on the full name using the helpers.tpl file. I recommend always having a service account set up so that the application will be directly associated with a user that is controlled in the chart.
 
 As an administrator, if you use the default service accounts, you will have either too few permissions or too many permissions, so change this.
 
 Before:
-
+```console
 serviceAccount:
  # Specifies whether a service account should be created
   create: true
@@ -153,8 +152,9 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   Name:
-
+```
 After:
+```console
 
 serviceAccount:
  # Specifies whether a service account should be created
@@ -164,11 +164,11 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   Name: cherrybomb
-
+```
 Security
 
 You can configure pod security to set limits on what type of filesystem group to use or which user can and cannot be used. Understanding these options is important to securing a Kubernetes pod, but for this example, I will leave this alone.
-
+```console
 podSecurityContext: {}
   # fsGroup: 2000
 
@@ -179,11 +179,11 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
-
+```
 Networking
 
 There are two different types of networking options in this chart. One uses a local service network with a ClusterIP address, which exposes the service on a cluster-internal IP. Choosing this value makes the service associated with your application reachable only from within the cluster (and through ingress, which is set to false by default). The other networking option is NodePort, which exposes the service on each Kubernetes node's IP address on a statically assigned port. This option is recommended for running minikube, so use it for this how-to.
-
+```console
 Before:
 
 service:
@@ -192,22 +192,22 @@ service:
 
 ingress:
   enabled: false
-
+```
 After:
-
+```console
 service:
   type: NodePort
   port: 80
 
 ingress:
   enabled: false
-
+```
 Resources
 
 Helm allows you to explicitly allocate hardware resources. You can configure the maximum amount of resources a Helm chart can request and the highest limits it can receive. Since I'm using Minikube on a laptop, I'll set a few limits by removing the curly braces and the hashes to convert the comments into commands.
 
 Before:
-
+```console
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -219,9 +219,9 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-
+```
 After:
-
+```console
 resources:
  # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -233,7 +233,7 @@ resources:
    requests:
      cpu: 100m
      memory: 128Mi
-
+```console
 Tolerations, node selectors, and affinities
 
 These last three values are based on node configurations. Although I cannot use any of them in my local configuration, I'll still explain their purpose.

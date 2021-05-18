@@ -306,18 +306,23 @@ release1	staging  	2       	2021-05-18 10:39:15.494479617 +0530 IST	deployed	bui
 ```
 ### Rollback 
 ```
-$ helm rollback release1 1 -n mytools
-$ helm list -n mytools  [watch "REVISION" number changes ]
-$ kubectl get secrets -n mytools
+$ helm rollback release1 1 -n staging
+Rollback was a success! Happy Helming!
+
+$ helm list -n staging [watch "REVISION" number changes ]
+NAME    	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART           	APP VERSION
+release1	staging  	3       	2021-05-18 10:42:02.056325362 +0530 IST	deployed	buildchart-0.1.0	1.16.0  
+
+$ kubectl get secrets -n staging
 ```
 
 ### Install on diff namespace
 ```
-helm install release1 buildchart-0.1.0.tgz -n mytools 
+helm install release1 buildchart-0.1.0.tgz -n staging 
 ```
 ### Delete the deployment.
 ```
-helm delete release1  -n mytools
+helm delete release1  -n staging
 ```
 #### Conclusion
 

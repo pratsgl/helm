@@ -79,10 +79,9 @@ You can upload this package to your Chart repository, or install it to your clus
 First, install your Chart “chartname”:
 
  #### method 1 (with dryrun) : 
-  ```
+  ``` 
  $ helm install --dry-run --debug release1 buildchart-0.1.0.tgz    
- 
- $ helm install --dry-run --debug release2 buildchart-0.2.0.tgz 
+
 install.go:149: [debug] Original chart version: ""
 install.go:166: [debug] CHART PATH: /home/user/projects/helm/buildchart-0.2.0.tgz
 

@@ -125,8 +125,13 @@ helm install release1 buildchart-0.1.0.tgz -n mytools
 ```
 helm delete release1  -n mytools
 ```
-Resources :
+#### Conclusion
 
+Helm is here to stay. It has helped and will help a lot of Kubernetes developers out there for a long time. 
+If you want to know how to use Helm, you can refer to their docs: https://helm.sh/
+
+Resources :
 - https://opensource.com/article/20/5/helm-charts
 - https://medium.com/bb-tutorials-and-thoughts/how-to-get-started-with-helm-b3babb30611f
 - https://amazicworld.com/using-helm-to-package-and-deploy-container-applications/
+

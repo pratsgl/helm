@@ -246,6 +246,20 @@ NOTES:
   echo http://$NODE_IP:$NODE_PORT
 
  ```
+ #### Installation 
+```
+$ helm install  release2 buildchart-0.2.0.tgz -n staging
+NAME: release2
+LAST DEPLOYED: Tue May 18 10:47:40 2021
+NAMESPACE: staging
+STATUS: deployed
+REVISION: 1
+NOTES:
+1. Get the application URL by running these commands:
+  export NODE_PORT=$(kubectl get --namespace staging -o jsonpath="{.spec.ports[0].nodePort}" services cherry-chart)
+  export NODE_IP=$(kubectl get nodes --namespace staging -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+```
  ```
  $ helm install release1 buildchart-0.1.0.tgz  
  ```
@@ -264,15 +278,31 @@ Open Browser and check with NodePort & Port
 List the helm releases – you should see a generated deployment name with the Docker image designated by “chartname”.
 
 ```
-$ helm list   or /     helm ls -n mytools
+$ helm list -n staging or helm ls -n staging
+NAME    	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART           	APP VERSION
+release2	staging  	1       	2021-05-18 10:47:40.609466405 +0530 IST	deployed	buildchart-0.2.0	1.16.0 
 ```
 ### Upgrade : 
 To make changes, update the version number in chart.yaml. Package the Chart, and upgrade.
 
 Copy values.yaml to override-values.yaml - change replicas to "2"
 ```
-$ helm upgrade -f values.yaml -f override-values.yaml release1 ./../buildchart -n mytools  [ you should be inside respective chart folder] 
-$ helm list -n mytools
+$ helm upgrade -f values.yaml -f override-values.yaml release1 ./../buildchart -n staging  [ you should be inside respective chart folder] 
+Release "release1" has been upgraded. Happy Helming!
+NAME: release1
+LAST DEPLOYED: Tue May 18 10:39:15 2021
+NAMESPACE: staging
+STATUS: deployed
+REVISION: 2
+NOTES:
+1. Get the application URL by running these commands:
+  export NODE_PORT=$(kubectl get --namespace staging -o jsonpath="{.spec.ports[0].nodePort}" services cherry-chart)
+  export NODE_IP=$(kubectl get nodes --namespace staging -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+
+$ helm list -n staging
+NAME    	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART           	APP VERSION
+release1	staging  	2       	2021-05-18 10:39:15.494479617 +0530 IST	deployed	buildchart-0.1.0	1.16.0
 ```
 ### Rollback 
 ```

@@ -258,7 +258,7 @@ After changes values.yaml look as following
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: nginx
@@ -321,8 +321,6 @@ tolerations: []
 
 affinity: {}
 ```
-
-
 
 
 #### How do these files map together?

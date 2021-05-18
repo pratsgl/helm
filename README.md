@@ -4,8 +4,15 @@
 Helm (site) is an open-source Kubernetes package and operations manager. A Helm Chart at its minimum will contain a deployment and a service, but can contain any number of Kubernetes objects, for example ingress and persistent Volume Claims.
 
 ### Why would we use Helm?
+Helm really shines where Kubernetes didn't go. For instance, templating. The scope of the Kubernetes project is to deal with your containers for you, not your template files. 
 
-We have already learned that a Helm Chart is used to deploy an application or even as a part of a larger application deployment strategy. There are many official Helm Charts, which can be downloaded from their respective repositories. Because they utilize an open-source licensing model you are free to use as-is or modify to suit your purpose. For example modify a Helm Chart to install a PostgreSQL container rather than a MySQL one.
+This makes it overly difficult to create truly generic files to be used across a large team or a large organization with many different parameters that need to be set for each file.
+
+And also, how do you version sensitive information using Git when template files are plain text?
+
+The answer: Go templates. Helm allows you to add variables and use functions inside your template files. This makes it perfect for scalable applications that'll eventually need to have their parameters changed.
+
+We have already learnt that a Helm Chart is used to deploy an application or even as a part of a larger application deployment strategy. There are many official Helm Charts, which can be downloaded from their respective repositories. Because they utilize an open-source licensing model you are free to use as-is or modify to suit your purpose. For example modify a Helm Chart to install a PostgreSQL container rather than a MySQL one.
 
 The power of a Helm Chart is clear. It simplifies software deployment (installation, configuration, integration). Helm is a layer of abstraction that can simplify deployment whilst providing a method of repeatability, which in turn brings stability – and stability is one of the core pillars of operational desires.
 

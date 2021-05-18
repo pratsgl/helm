@@ -81,6 +81,171 @@ First, install your Chart “chartname”:
  #### method 1 (with dryrun) : 
   ```
  $ helm install --dry-run --debug release1 buildchart-0.1.0.tgz    
+ 
+ $ helm install --dry-run --debug release2 buildchart-0.2.0.tgz 
+install.go:149: [debug] Original chart version: ""
+install.go:166: [debug] CHART PATH: /home/user/projects/helm/buildchart-0.2.0.tgz
+
+NAME: release2
+LAST DEPLOYED: Tue May 18 10:47:19 2021
+NAMESPACE: default
+STATUS: pending-install
+REVISION: 1
+USER-SUPPLIED VALUES:
+{}
+
+COMPUTED VALUES:
+affinity: {}
+fullnameOverride: cherry-chart
+image:
+  pullPolicy: Always
+  repository: nginx
+imagePullSecrets: []
+ingress:
+  annotations: {}
+  enabled: false
+  hosts:
+  - host: chart-example.local
+    paths: []
+  tls: []
+nameOverride: cherry-awesome-app
+nodeSelector: {}
+podSecurityContext: {}
+replicaCount: 2
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+securityContext: {}
+service:
+  port: 80
+  type: NodePort
+serviceAccount:
+  create: true
+  name: cherrybomb
+tolerations: []
+
+HOOKS:
+---
+# Source: buildchart/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "cherry-chart-test-connection"
+  labels:
+
+    helm.sh/chart: buildchart-0.2.0
+    app.kubernetes.io/name: cherry-awesome-app
+    app.kubernetes.io/instance: release2
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['cherry-chart:80']
+  restartPolicy: Never
+MANIFEST:
+---
+# Source: buildchart/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cherrybomb
+  labels:
+
+    helm.sh/chart: buildchart-0.2.0
+    app.kubernetes.io/name: cherry-awesome-app
+    app.kubernetes.io/instance: release2
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: buildchart/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: cherry-chart
+  labels:
+    helm.sh/chart: buildchart-0.2.0
+    app.kubernetes.io/name: cherry-awesome-app
+    app.kubernetes.io/instance: release2
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: cherry-awesome-app
+    app.kubernetes.io/instance: release2
+---
+# Source: buildchart/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cherry-chart
+  labels:
+    helm.sh/chart: buildchart-0.2.0
+    app.kubernetes.io/name: cherry-awesome-app
+    app.kubernetes.io/instance: release2
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cherry-awesome-app
+      app.kubernetes.io/instance: release2
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cherry-awesome-app
+        app.kubernetes.io/instance: release2
+    spec:
+      serviceAccountName: cherrybomb
+      securityContext:
+        {}
+      containers:
+        - name: buildchart
+          securityContext:
+            {}
+          image: "nginx:1.16.0"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+
+NOTES:
+1. Get the application URL by running these commands:
+  export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services cherry-chart)
+  export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+
  ```
  ```
  $ helm install release1 buildchart-0.1.0.tgz  

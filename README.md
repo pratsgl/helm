@@ -266,7 +266,7 @@ NOTES:
  ```
 Or
 
-#### method 2:    
+#### method 2 : [by passing absolue path of values file]   
 ```console
 helm install my-cherry-chart buildachart/ --values buildachart/values.yaml 
 ```

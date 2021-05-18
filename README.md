@@ -79,7 +79,8 @@ You can upload this package to your Chart repository, or install it to your clus
 First, install your Chart “chartname”:
 
  #### method 1 (with dryrun) : 
-  ``` console
+ ``` console
+  
  $ helm install --dry-run --debug release1 buildchart-0.1.0.tgz    
 
 install.go:149: [debug] Original chart version: ""
@@ -247,7 +248,7 @@ NOTES:
 
  ```
  #### Installation 
-```
+```console
 $ helm install  release2 buildchart-0.2.0.tgz -n staging
 NAME: release2
 LAST DEPLOYED: Tue May 18 10:47:40 2021
@@ -260,24 +261,24 @@ NOTES:
   export NODE_IP=$(kubectl get nodes --namespace staging -o jsonpath="{.items[0].status.addresses[0].address}")
   echo http://$NODE_IP:$NODE_PORT
 ```
- ```
+ ```console
  $ helm install release1 buildchart-0.1.0.tgz  
  ```
 Or
 
 #### method 2:    
-```
+```console
 helm install my-cherry-chart buildachart/ --values buildachart/values.yaml 
 ```
 Check resources on K8s cluster
-```
+```console
 $ kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}"
 $ kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services cherry-chart
 ```
 Open Browser and check with NodePort & Port
 List the helm releases – you should see a generated deployment name with the Docker image designated by “chartname”.
 
-```
+```console
 $ helm list -n staging or helm ls -n staging
 NAME    	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART           	APP VERSION
 release2	staging  	1       	2021-05-18 10:47:40.609466405 +0530 IST	deployed	buildchart-0.2.0	1.16.0 
@@ -286,7 +287,7 @@ release2	staging  	1       	2021-05-18 10:47:40.609466405 +0530 IST	deployed	bui
 To make changes, update the version number in chart.yaml. Package the Chart, and upgrade.
 
 Copy values.yaml to override-values.yaml - change replicas to "2"
-```
+```console
 $ helm upgrade -f values.yaml -f override-values.yaml release1 ./../buildchart -n staging  [ you should be inside respective chart folder] 
 Release "release1" has been upgraded. Happy Helming!
 NAME: release1
@@ -305,7 +306,7 @@ NAME    	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHA
 release1	staging  	2       	2021-05-18 10:39:15.494479617 +0530 IST	deployed	buildchart-0.1.0	1.16.0
 ```
 ### Rollback 
-```
+```console
 $ helm rollback release1 1 -n staging
 Rollback was a success! Happy Helming!
 
@@ -317,11 +318,11 @@ $ kubectl get secrets -n staging
 ```
 
 ### Install on diff namespace
-```
+```console
 helm install release1 buildchart-0.1.0.tgz -n staging 
 ```
 ### Delete the deployment.
-```
+```console
 helm delete release1  -n staging
 ```
 #### Conclusion

@@ -25,7 +25,7 @@ Currently we have only added the standard Helm repository, but you will want to 
 At its most basic a Helm Chart is a yaml file. You will need to get acquainted with these if you want to deploy your own custom applications.
 
 To generate a skeleton Chart you use the following command (chartname is your name for your Chart):
-```
+```console
 $ helm create buildachart
 
 $ find .

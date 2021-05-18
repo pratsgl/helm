@@ -268,7 +268,7 @@ Or
 
 #### method 2 : [by passing absolue path of values file]   
 ```console
-helm install my-cherry-chart buildachart/ --values buildachart/values.yaml 
+$ helm install my-cherry-chart buildachart/ --values buildachart/values.yaml 
 ```
 Check resources on K8s cluster
 ```console
@@ -319,11 +319,11 @@ $ kubectl get secrets -n staging
 
 ### Install on diff namespace
 ```console
-helm install release1 buildchart-0.1.0.tgz -n staging 
+$ helm install release1 buildchart-0.1.0.tgz -n staging 
 ```
 ### Delete the deployment.
 ```console
-helm delete release1  -n staging
+$ helm delete release1  -n staging
 ```
 #### Conclusion
 

@@ -16,6 +16,21 @@ We have already learnt that a Helm Chart is used to deploy an application or eve
 
 The power of a Helm Chart is clear. It simplifies software deployment (installation, configuration, integration). Helm is a layer of abstraction that can simplify deployment whilst providing a method of repeatability, which in turn brings stability – and stability is one of the core pillars of operational desires.
 
+### Understanding Helm’s Architecture
+
+Helm’s mainly focuses on three things when you are managing applications in the cluster.
+
+Security: Helm makes sure that the package comes from a trusted source and the security of the network it is pulled from, etc.
+
+Reusability: We can install the same thing again and again into the cluster or namespace in a cluster. We can do it repeatedly and predictably.
+
+Configurability: We can externalize the configuration and pass it while installing the repository into the cluster. Even though Helm is not a configuration management tool but still provides some configuration.
+Charts
+
+A Chart in a Helm is nothing but a packaged version of your application. A chart is a set of files and directories that follows some specification for describing the resources to be installed into Kubernetes.
+
+A chart contains Chart.yaml that provides the information about the chart version, name, description, etc. All the Kubernetes manifest files are under the templates folder. You can pass the configuration with the Values.yaml file. This file contains parameters that you can override during installation and upgrade.
+
 ### Customizing your Helm Environment
 
 Currently we have only added the standard Helm repository, but you will want to create your own Charts that are customized for your environment. As your customized Charts cannot be easily be hosted on the default repository; this will mean hosting your own repository. Fortunately, this is easy as a Helm repository is effectively any HTTPS server that can service yaml, tar files and answer GET requests. 
@@ -46,6 +61,199 @@ $ find .
 ./buildchart/templates/service.yaml
 ```
 This creates a values.yaml file, a template folder that contains three more yaml files; deployment, ingress and service. Amongst a number of other files as outlined below:
+
+
+#### Examine the chart's structure
+
+Now that you have created the chart, take a look at its structure to see what's inside. The first two files you see—Chart.yaml and values.yaml—define what the chart is and what values will be in it at deployment.
+
+Look at Chart.yaml, and you can see the outline of a Helm chart's structure:
+
+```console
+apiVersion: v2
+name: buildachart
+description: A Helm chart for Kubernetes
+
+# A chart can be either an 'application' or a 'library' chart.
+#
+# Application charts are a collection of templates that can be packaged into versioned archives
+# to be deployed.
+#
+# Library charts provide useful utilities or functions for the chart developer. They're included as
+# a dependency of application charts to inject those utilities and functions into the rendering
+# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+version: 0.1.0
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application.
+appVersion: 1.16.0
+```
+The first part includes the API version that the chart is using (this is required), the name of the chart, and a description of the chart. The next section describes the type of chart (an application by default), the version of the chart you will deploy, and the application version (which should be incremented as you make changes).
+
+The most important part of the chart is the template directory. It holds all the configurations for your application that will be deployed into the cluster. As you can see below, this application has a basic deployment, ingress, service account, and service. This directory also includes a test directory, which includes a test for a connection into the app. Each of these application features has its own template files under **templates**/:
+```console
+$ ls templates/
+NOTES.txt            _helpers.tpl         deployment.yaml      ingress.yaml   
+```
+There is another directory, called charts, which is empty. It allows you to add dependent charts that are needed to deploy your application. Some Helm charts for applications have up to four extra charts that need to be deployed with the main application. When this happens, the values file is updated with the values for each chart so that the applications will be configured and deployed at the same time. This is a far more advanced configuration (which I will not cover in this introductory article), so leave the **charts**/ folder empty.
+
+Understand and edit values
+
+Template files are set up with formatting that collects deployment information from the values.yaml file. Therefore, to customize your Helm chart, you need to edit the values file. By default, the values.yaml file looks like:
+
+Change the value to Always.
+
+Before:
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+
+After:
+
+image:
+  repository: nginx
+  pullPolicy: Always
+
+Naming and secrets
+
+Next, take a look at the overrides in the chart. The first override is imagePullSecrets, which is a setting to pull a secret, such as a password or an API key you've generated as credentials for a private registry. Next are nameOverride and fullnameOverride. From the moment you ran helm create, its name (buildachart) was added to a number of configuration files—from the YAML ones above to the templates/helper.tpl file. If you need to rename a chart after you create it, this section is the best place to do it, so you don't miss any configuration files.
+
+Change the chart's name using overrides.
+
+Before:
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+After:
+
+imagePullSecrets: []
+nameOverride: "cherry-awesome-app"
+fullnameOverride: "cherry-chart"
+
+Accounts
+
+Service accounts provide a user identity to run in the pod inside the cluster. If it's left blank, the name will be generated based on the full name using the helpers.tpl file. I recommend always having a service account set up so that the application will be directly associated with a user that is controlled in the chart.
+
+As an administrator, if you use the default service accounts, you will have either too few permissions or too many permissions, so change this.
+
+Before:
+
+serviceAccount:
+ # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  Name:
+
+After:
+
+serviceAccount:
+ # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  Name: cherrybomb
+
+Security
+
+You can configure pod security to set limits on what type of filesystem group to use or which user can and cannot be used. Understanding these options is important to securing a Kubernetes pod, but for this example, I will leave this alone.
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+Networking
+
+There are two different types of networking options in this chart. One uses a local service network with a ClusterIP address, which exposes the service on a cluster-internal IP. Choosing this value makes the service associated with your application reachable only from within the cluster (and through ingress, which is set to false by default). The other networking option is NodePort, which exposes the service on each Kubernetes node's IP address on a statically assigned port. This option is recommended for running minikube, so use it for this how-to.
+
+Before:
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+
+After:
+
+service:
+  type: NodePort
+  port: 80
+
+ingress:
+  enabled: false
+
+Resources
+
+Helm allows you to explicitly allocate hardware resources. You can configure the maximum amount of resources a Helm chart can request and the highest limits it can receive. Since I'm using Minikube on a laptop, I'll set a few limits by removing the curly braces and the hashes to convert the comments into commands.
+
+Before:
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+After:
+
+resources:
+ # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+   limits:
+     cpu: 100m
+     memory: 128Mi
+   requests:
+     cpu: 100m
+     memory: 128Mi
+
+Tolerations, node selectors, and affinities
+
+These last three values are based on node configurations. Although I cannot use any of them in my local configuration, I'll still explain their purpose.
+
+nodeSelector comes in handy when you want to assign part of your application to specific nodes in your Kubernetes cluster. If you have infrastructure-specific applications, you set the node selector name and match that name in the Helm chart. Then, when the application is deployed, it will be associated with the node that matches the selector.
+
+Tolerations, tainting, and affinities work together to ensure that pods run on separate nodes. Node affinity is a property of pods that attracts them to a set of nodes (either as a preference or a hard requirement). Taints are the opposite—they allow a node to repel a set of pods.
+
+In practice, if a node is tainted, it means that it is not working properly or may not have enough resources to hold the application deployment. Tolerations are set up as a key/value pair watched by the scheduler to confirm a node will work with a deployment.
+
+Node affinity is conceptually similar to nodeSelector: it allows you to constrain which nodes your pod is eligible to be scheduled based on labels on the node. However, the labels differ because they match rules that apply to scheduling.
+```console
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+```
+
+
 
 #### How do these files map together?
  It is in here that Helm finds the YAML definitions for your Services, Deployments and other Kubernetes objects. If you have already generated definitions for your application, all you need to do is replace the generated empty YAML files for your own and voila, you have a working Chart that you can simply deploy using the helm install command.

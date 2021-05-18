@@ -26,7 +26,7 @@ At its most basic a Helm Chart is a yaml file. You will need to get acquainted w
 
 To generate a skeleton Chart you use the following command (chartname is your name for your Chart):
 ```console
-$ helm create buildachart
+$ helm create buildchart
 
 $ find .
 .

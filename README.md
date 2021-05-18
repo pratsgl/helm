@@ -67,12 +67,12 @@ The next file to look at is the NOTES.txt file this is effectively your Chart do
 
 ### Deploying your first Helm Chart
 ```console
-vi ./buildchart/values.yaml 
+$ vi ./buildchart/values.yaml 
 ```
 Customize changes
 When your Chart is ready, you can use this command to create a .tgz package:
 ```console
-helm package buildchart
+$ helm package buildchart
 ```
 You can upload this package to your Chart repository, or install it to your cluster. You can also install or upgrade the Chart without packaging it first.
 
@@ -80,7 +80,6 @@ First, install your Chart “chartname”:
 
  #### method 1 (with dryrun) : 
  ``` console
-  
  $ helm install --dry-run --debug release1 buildchart-0.1.0.tgz    
 
 install.go:149: [debug] Original chart version: ""

@@ -3,6 +3,19 @@
 ### What is helm ?
 Helm (site) is an open-source Kubernetes package and operations manager. A Helm Chart at its minimum will contain a deployment and a service, but can contain any number of Kubernetes objects, for example ingress and persistent Volume Claims.
 
+In this post, we will see how we can get started with Helm and deploy Kubernetes Objects with Helm
+
+    Use of Helm
+    Understanding Helm’s Architecture
+    Working with Kubernetes Cluster
+    Helm Basic Operations
+    Example project with "nginx" pod
+    Building a Helm Chart
+    Installing a Local Helm Chart
+    Upgrading Deployment
+    Rolling back deployment
+    Delete deployment
+
 ### Why would we use Helm?
 Helm really shines where Kubernetes didn't go. For instance, templating. The scope of the Kubernetes project is to deal with your containers for you, not your template files. 
 

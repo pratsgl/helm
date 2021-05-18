@@ -5,7 +5,7 @@ Helm (site) is an open-source Kubernetes package and operations manager. A Helm 
 
 In this post, we will see how we can get started with Helm and deploy Kubernetes Objects with Helm
 
-    Use of Helm
+   -  Use of Helm
     Understanding Helm’s Architecture
     Working with Kubernetes Cluster
     Helm Basic Operations

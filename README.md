@@ -612,6 +612,34 @@ $ helm install release1 buildchart-0.1.0.tgz -n staging
 ```console
 $ helm delete release1  -n staging
 ```
+
+### Helm commands
+
+#### Search in local repo
+$ helm search repo 
+eg: helm search repo nginx 
+
+### Search in hub
+$ helm search hub nginx
+
+#### Update
+$ helm repo update
+
+### Add to repo
+$ helm repo add bitnami https://charts.bitnami.com/bitnami 
+Note: These repos are not stored in your local system repo , but they are reference of metadata
+
+### Pull charts
+$ helm pull bitnami/nginx --untar=true
+
+### Install helm charts
+$ helm install helm-nginx-release1 bitnami/nginx -n staging 
+Note :  "staging" is a name space on K8s
+
+### Delete helm deployment
+$ helm delete helm-nginx -n staging 
+
+
 #### Conclusion
 
 Helm is here to stay. It has helped and will help a lot of Kubernetes developers out there for a long time. 

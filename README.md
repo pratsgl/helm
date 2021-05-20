@@ -614,6 +614,7 @@ $ helm delete release1  -n staging
 ```
 
 ### Helm commands
+```console
 
 #### Search in local repo
 $ helm search repo 
@@ -638,7 +639,7 @@ Note :  "staging" is a name space on K8s
 
 ### Delete helm deployment
 $ helm delete helm-nginx -n staging 
-
+```
 
 #### Conclusion
 
